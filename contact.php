@@ -6,11 +6,18 @@ require 'validation.php';
 
 header('X-FRAME-OPTIONS:DENY');
 
-function h($str) {
+function h($str)
+{
     return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
 }
 
+function i($str)
+{
+    return     preg_replace('/[[:cntrl:]]/u', '', $str);
+}
+
 $pageflag = 0;
+$errors = validation($_POST);
 
 if (!empty($_POST["btn-confirm"]) && empty($errors)) {
     $pageflag = 1;
@@ -62,19 +69,19 @@ if (!empty($_POST["btn-submit"])) {
                 <div class="form">
                     <label for="email" class="info">メールアドレス</label>
                     <input class="input-area" type="email" name="email" placeholder="aaa@test.com" value="<?php if (!empty($_POST['email'])) {
-                                                                                                            echo h($_POST['email']);
-                                                                                                        } ?>">
+                                                                                                                $email = h($_POST['email']);
+                                                                                                                $email = i($email);
+                                                                                                                echo $email;
+                                                                                                            } ?>">
                 </div>
                 <?php if (!empty($errors['email']) && !empty($_POST['btn-confirm'])) {
                     echo '<p class="error">' . $errors['email'] . '</p>';
                 } ?>
                 <div class="form">
                     <label for="message" class="info">お問い合わせ内容</label>
-                    <textarea class="content-area" name="contact" placeholder="お問い合わせ内容を入力してください。"><?php if(!empty($_POST["contact"])){echo h($_POST["contact"]) ;}?></textarea>
+                    <textarea class="content-area" name="contact" placeholder="お問い合わせ内容を入力してください。"><?php if (!empty($_POST["contact"])) {echo h($_POST["contact"]);} ?></textarea>
                 </div>
-                <?php if (!empty($errors['contact']) && !empty($_POST['btn-confirm'])) {
-                    echo '<p class="error">' . $errors['contact'] . '</p>';
-                } ?>
+                <?php if (!empty($errors['contact']) && !empty($_POST['btn-confirm'])){echo '<p class="error">' . $errors['contact'] . '</p>';} ?>
                 <input class="btn" type="submit" name="btn-confirm" value="確認画面へ">
                 <input type="hidden" name="csrf" value="<?php echo $_SESSION['token']; ?>">
             </div>
@@ -94,22 +101,20 @@ if (!empty($_POST["btn-submit"])) {
                         <div class="input-area"><?php echo h($_POST["email"]); ?></div>
                     </div>
                     <div class="form">
-                        <label for="message" class="info">お問い合わせ内容</label>
+                        <label for="contact" class="info">お問い合わせ内容</label>
                         <div class="content-area"><?php echo h($_POST["contact"]); ?></div>
                     </div>
                     <div class="btn-all">
                         <input class="back-btn" type="submit" name="back" value="戻る">
                         <input class="submit-btn" type="submit" name="btn-submit" value="送信する">
                     </div>
-                    <input type="hidden" name="name" value="<?php if (!empty($_POST["name"])) {
-                                                                echo h($_POST["name"]);
+                    <input type="hidden" name="name" value="<?php if (!empty($_POST['name'])) {
+                                                                echo h($_POST['name']);
                                                             } ?>">
-                    <input type="hidden" name="email" value="<?php if (!empty($_POST["email"])) {
-                                                                    echo h($_POST["email"]);
+                    <input type="hidden" name="email" value="<?php if (!empty($_POST['email'])) {
+                                                                    echo h($_POST['email']);
                                                                 } ?>">
-                    <input type="hidden" name="message" value="<?php if (!empty($_POST["contact"])) {
-                                                                    echo $_POST["contact"];
-                                                                } ?>">
+                    <input type="hidden" name="contact" value="<?php if (!empty($_POST["contact"])) {echo $_POST["contact"];} ?>">
                     <input type="hidden" name="csrf" value="<?php echo h($_POST['csrf']); ?>">
                 </div>
             </form>
@@ -117,6 +122,11 @@ if (!empty($_POST["btn-submit"])) {
     <?php endif; ?>
     <?php if ($pageflag === 2) : ?>
         <?php if ($_POST['csrf'] === $_SESSION['token']) : ?>
+
+            <?php require '../mainte/insert.php';
+
+            insertContact($_POST);
+            ?>
 
             <div class="complete">
                 <h1 class="thank-you">thank you!</h1>
