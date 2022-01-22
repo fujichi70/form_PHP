@@ -78,7 +78,7 @@ if (!empty($_POST["btn-submit"])) {
                     echo '<p class="error">' . $errors['email'] . '</p>';
                 } ?>
                 <div class="form">
-                    <label for="message" class="info">お問い合わせ内容</label>
+                    <label for="contact" class="info">お問い合わせ内容</label>
                     <textarea class="content-area" name="contact" placeholder="お問い合わせ内容を入力してください。"><?php if (!empty($_POST["contact"])) {echo h($_POST["contact"]);} ?></textarea>
                 </div>
                 <?php if (!empty($errors['contact']) && !empty($_POST['btn-confirm'])){echo '<p class="error">' . $errors['contact'] . '</p>';} ?>
