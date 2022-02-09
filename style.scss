@@ -187,6 +187,17 @@ body {
 	font-family: "Kaisei Decol", serif;
 }
 
+.top-back {
+	display: inline-block;
+	margin-top: 20px;
+	text-align: center;
+	text-decoration: none;
+	background-color: rgb(255, 153, 0);
+	color: white;
+	box-shadow: 3px 3px 0 0 rgb(189, 113, 0);
+	padding: 10px 20px;
+}
+
 @media screen and (min-width: 720px) {
 	.contact-all,
 	.confirm-all {

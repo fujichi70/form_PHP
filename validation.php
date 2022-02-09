@@ -13,7 +13,18 @@ function validation($request) {
     }
 
     if (empty($request['contact']) || mb_strlen($request['contact']) >= 400) {
-        $errors['contact'] = 'お問い合わせ内容をご入力ください。また、内容は400字まで入力できます。';
+        $errors['contact'] = 'お問い合わせ内容をご入力ください。また、内容は400文字まで入力できます。';
     }
     return $errors;
 }
+
+function h($str)
+{
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
+function i($str)
+{
+    return preg_replace('/[[:cntrl:]]/u', '', $str);
+}
+
